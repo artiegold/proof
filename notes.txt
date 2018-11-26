@@ -1,0 +1,10 @@
+At a very high level these are things needed:
+
+A service for user management that can:
+    - ingest data (e.g. from the csv)
+    - serve data for a user (ip address is the key)
+
+A service for deciding what image to serve based upon user data.
+
+A store for the images to be served. (That will be in the filesystem)
+
