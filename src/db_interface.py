@@ -35,4 +35,6 @@ class db_interface:
         cur.execute(sql, [ip_address])
         return model.make_user(cur.fetchone())
 
-        
+if __name__ == '__main__':
+    print 'nothing to do yet'
+
