@@ -47,13 +47,17 @@ class Extract_CSV_Info:
                 return False
         return True
 
+    @staticmethod
+    def stripped(line):
+        return dict((k, v.strip()) for k, v in line.iteritems())
+
     def get_lines(self, input_file, column_names):
         """Yields valid lines from input."""
         reader = csv.DictReader(input_file, column_names)
         for line in reader:
             del line[None]
             if self.valid(line):
-                yield line
+                yield Extract_CSV_Info.stripped(line)
 
     def check_columns(self, column_names):
         """Verifies expected columns are present. Throws ColumnNameException otherwise."""

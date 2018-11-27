@@ -16,7 +16,10 @@ class db_interface:
         """
         cur = self.conn.cursor()
         cur.execute(sql)
-        return model.make_rules(cur.fetchall())
+        result = cur.fetchall()
+        if result is None:
+            return []
+        return model.make_rules(result)
 
     def get_campaigns(self):
         sql = """
@@ -24,7 +27,10 @@ class db_interface:
         """
         cur = self.conn.cursor()
         cur.execute(sql)
-        return model.make_campaigns(cur.fetchall())
+        result = cur.fetchall()
+        if result is None:
+            return {}
+        return model.make_campaigns(result)
 
     def get_user(self, ip_address):
         sql = """
@@ -49,6 +55,16 @@ class db_interface:
             cur.execute('ROLLBACK')
             self.conn.commit()
             raise e
+
+    def add_users(self, source):
+        cur = self.conn.cursor()
+        cur.execute('BEGIN')
+        items = 0
+        for item in source:
+            self.add_user(item)
+            items += 1
+        self.conn.commit()
+        return items
 
 if __name__ == '__main__':
     print 'nothing to do yet'

@@ -16,7 +16,8 @@ create type t_industry_name as enum (
     'Sports',
     'Marketing',
     'Oil and Gas',
-    'Tourism'
+    'Tourism',
+    'Retail'
 );
 
 -- these are the relevant column names
