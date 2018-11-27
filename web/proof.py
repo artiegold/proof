@@ -1,4 +1,4 @@
-from flask import Flask, abort, request
+from flask import Flask, abort, request, render_template
 import json
 
 app = Flask(__name__)
@@ -9,9 +9,7 @@ def ping():
 
 @app.route('/', methods = ['GET'])
 def main():
-    return str(request.remote_addr)
-
-
+    return render_template('template.html', basename="shrug.jpg")
 
 if __name__ == '__main__':
     app.run()

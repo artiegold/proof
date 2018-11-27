@@ -16,7 +16,7 @@ class db_interface:
         """
         cur = self.conn.cursor()
         cur.execute(sql)
-        return model.make_rules(cur.fetchAll())
+        return model.make_rules(cur.fetchall())
 
     def get_campaigns(self):
         sql = """
@@ -24,16 +24,31 @@ class db_interface:
         """
         cur = self.conn.cursor()
         cur.execute(sql)
-        return model.make_campaigns(cur.fetchAll())
+        return model.make_campaigns(cur.fetchall())
 
     def get_user(self, ip_address):
         sql = """
-            SELECT ip_address, geo, industry, company_size from user 
+            SELECT ip_address, geo, industry, company_size from site_user 
             WHERE ip_address = %s
-            """
+        """
         cur = self.conn.cursor()
         cur.execute(sql, [ip_address])
-        return model.make_user(cur.fetchone())
+        result = cur.fetchone()
+        if result is None:
+            return None
+        return model.make_user(result)
+
+    def add_user(self, user_info):
+        sql = """
+            INSERT INTO site_user VALUES (%s, %s, %s, %s, %s)
+        """
+        cur = self.conn.cursor()
+        try:
+            cur.execute(sql, [user_info['User ID'], user_info['IP'], user_info['Geo'], user_info['Industry'], user_info['Company Size']])
+        except Exception as e:
+            cur.execute('ROLLBACK')
+            self.conn.commit()
+            raise e
 
 if __name__ == '__main__':
     print 'nothing to do yet'
