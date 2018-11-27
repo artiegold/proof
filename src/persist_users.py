@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import db_interface
 import csv_interface
 
