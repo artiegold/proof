@@ -1,30 +1,5 @@
 import psycopg2
-import collections
-
-User = collections.namedtuple("User", "ip_address geo industry company_size")
-
-def make_user(the_tuple):
-    def user(ip_address, geo, industry, company_size):
-        return User(ip_address=ip_address, geo=geo, industry=industry, company_size=company_size)
-
-    return apply(user, the_tuple)
-
-Rule = collections.namedtuple("Rule", "id field target campaign_id")
-
-def make_rules(tuples):
-    def rule(id, field, target, campaign_id):
-        return Rule(id=id, field=field, target=target, campaign_id=campaign_id)
-
-    return [apply(rule, the_tuple) for the_tuple in tuples]
-
-Campaign = collections.namedtuple("Campaign", "campaign_id name image_url")
-def make_campaigns(items):
-    def campaign(campaign_id, name, image_url):
-        return Campaign(campaign_id=campaign_id, name=name, image_url=image_url)
-    campaigns = [apply(campaign, item) for item in items]
-    return dict([(campaign.campaign_id, campaign) for campaign in campaigns])
-    
-
+import model
 
 class db_interface:
     """Functions that access the database."""
@@ -41,7 +16,7 @@ class db_interface:
         """
         cur = self.conn.cursor()
         cur.execute(sql)
-        return make_rules(cur.fetchAll())
+        return model.make_rules(cur.fetchAll())
 
     def get_campaigns(self):
         sql = """
@@ -49,7 +24,7 @@ class db_interface:
         """
         cur = self.conn.cursor()
         cur.execute(sql)
-        return make_campaigns(cur.fetchAll())
+        return model.make_campaigns(cur.fetchAll())
 
     def get_user(self, ip_address):
         sql = """
@@ -58,6 +33,6 @@ class db_interface:
             """
         cur = self.conn.cursor()
         cur.execute(sql, [ip_address])
-        return make_user(cur.fetchone())
+        return model.make_user(cur.fetchone())
 
         

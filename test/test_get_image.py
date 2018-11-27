@@ -32,6 +32,7 @@ class test_get_image(unittest.TestCase):
         self.user_newyork_busking = model.user('192.168.5.5', 'New York', 'Busking', '100 - 200')
         self.user_sf_smb = model.user('192.168.6.6', 'San Francisco', 'Medicine', '201 - 500')
         self.user_la_proof = model.user('192.168.7.7', 'Los Angeles', 'Finance', '0 - 50')
+        self.user_oshkosh = model.user('192.168.8.8', 'Oshkosh', "None", '5001 - 20000')
 
     def test_get_campaign_id(self):
         self.assertEquals(1, self.get_image.get_campaign_id(self.user_austin_sports))
@@ -39,7 +40,13 @@ class test_get_image(unittest.TestCase):
         self.assertEquals(3, self.get_image.get_campaign_id(self.user_newyork_software))
         self.assertEquals(6, self.get_image.get_campaign_id(self.user_newyork_busking))
         self.assertEquals(2, self.get_image.get_campaign_id(self.user_sf_smb))
+        self.assertEquals(5, self.get_image.get_campaign_id(self.user_la_proof))
 
+    def test_get_image(self):
+        self.assertEquals('Austin.jpg', self.get_image.get_image_basename(self.user_austin_sports))
+        self.assertEquals('SanFrancisco.jpg', self.get_image.get_image_basename(self.user_sf_smb))
+        self.assertEquals('shrug.jpg', self.get_image.get_image_basename(self.user_oshkosh))
+        self.assertEquals('proof.jpg', self.get_image.get_image_basename(self.user_la_proof))
 
 if __name__ == '__main__':
     unittest.main()
