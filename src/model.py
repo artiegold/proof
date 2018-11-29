@@ -8,10 +8,10 @@ def user(ip_address, geo, industry, company_size):
 def make_user(item):
     return apply(user, item)
 
-Rule = collections.namedtuple('Rule', 'id field target campaign_id')
+Rule = collections.namedtuple('Rule', 'id field target campaign_id priority')
 
-def rule(id, field, target, campaign_id):
-    return Rule(id=id.strip(), field=field.strip(), target=target.strip(), campaign_id=campaign_id)
+def rule(id, field, target, campaign_id, priority):
+    return Rule(id=id.strip(), field=field.strip(), target=target.strip(), campaign_id=campaign_id, priority=priority)
 
 def make_rules(items):
     return [apply(rule, item) for item in items]
