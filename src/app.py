@@ -6,7 +6,7 @@ import model
 
 db = db_interface.db_interface('')
 rules = db.get_rules()
-im = get_image_mod.initialize(rules, db.get_campaigns())
+get_image_mod.initialize(rules, db.get_campaigns())
 
 def get_basename(ip_address):
     user = db.get_user(ip_address)
