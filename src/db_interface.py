@@ -148,16 +148,18 @@ class db_interface:
        
         if this is None:
             return False # the target was not found
+        
         if prev is None:
             new_priority = this.priority // 2
-
-        elif prev.id == rule_id:
-            return True # it is already there
-
-        if this.priority - prev.priority > 1:
-            new_priority = (this.priority + next.priority) // 2
         else:
-            self.rules_rewrite_priorities(rules, rule_id, index, self.BEFORE)
+            if prev.id == rule_id:
+                return True # it is already there
+
+            if this.priority - prev.priority > 1:
+                new_priority = (prev.priority + this.priority) // 2
+            else:
+                self.rules_rewrite_priorities(rules, rule_id, index, self.BEFORE)
+                return True
 
         self.rule_change_priority(rule_id, new_priority)
         get_image_mod.update_rules(self.get_rules())

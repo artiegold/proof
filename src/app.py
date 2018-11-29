@@ -39,5 +39,28 @@ def show_rules():
         rows=((rule.id, rule.field, rule.target, rule.campaign_id) for rule in rules)
     )
 
+@app.route('/rule/move/<rule_id>/after/<target>', methods=['GET', 'PUT'])
+def move_rule_after(rule_id, target):
+    db.move_rule_after(rule_id, target)
+    rules = db.get_rules()
+    return render_template(
+        'table.html', 
+        title="Rules",
+        headers=('Rule ID', 'Type', 'Target', 'Campaign ID'),
+        rows=((rule.id, rule.field, rule.target, rule.campaign_id) for rule in rules)
+    )
+    
+
+@app.route('/rule/move/<rule_id>/before/<target>', methods=['GET', 'PUT'])
+def move_rule_before(rule_id, target):
+    db.move_rule_before(rule_id, target)
+    rules = db.get_rules()
+    return render_template(
+        'table.html', 
+        title="Rules",
+        headers=('Rule ID', 'Type', 'Target', 'Campaign ID'),
+        rows=((rule.id, rule.field, rule.target, rule.campaign_id) for rule in rules)
+    )
+
 if __name__ == '__main__':
     app.run()
