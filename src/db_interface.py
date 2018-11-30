@@ -2,8 +2,12 @@ import psycopg2
 import model
 import get_image_mod
 
+class IllegalRequestException(Exception):
+    """General exception for illegal requests to this module."""
+    pass
+
 class db_interface:
-    """Functions that access the database."""
+    """Methods that access the database."""
 
     AFTER = 1
     BEFORE = 2
@@ -12,6 +16,7 @@ class db_interface:
         self.conn = psycopg2.connect(dsn)
 
     def get_rules(self):
+        """Return a list of rules in priority order."""
         sql = """
             SELECT rule.id, rule.field, rule.target, rule.campaign_id, rule_priority.priority
             FROM rule
@@ -26,6 +31,7 @@ class db_interface:
         return model.make_rules(result)
 
     def rule_change_priority(self, rule_id, new_priority):
+        """Change priority for a rule."""
         sql = """
             UPDATE rule_priority 
             SET priority = %s
@@ -36,6 +42,7 @@ class db_interface:
         cur.execute(sql, [new_priority, rule_id])
 
     def get_campaigns(self):
+        """Return a mapping from campaign to the image ot be displayed."""
         sql = """
             SELECT * from campaign_to_image
         """
@@ -47,6 +54,7 @@ class db_interface:
         return model.make_campaigns(result)
 
     def get_user(self, ip_address):
+        """Get a user from its IP address."""
         sql = """
             SELECT ip_address, geo, industry, company_size from site_user 
             WHERE ip_address = %s
@@ -59,6 +67,7 @@ class db_interface:
         return model.make_user(result)
 
     def add_user(self, user_info):
+        """Add a user to the user table."""
         sql = """
             INSERT INTO site_user VALUES (%s, %s, %s, %s, %s)
         """
@@ -71,6 +80,7 @@ class db_interface:
             raise e
 
     def add_users(self, source):
+        """Add users from an iterator."""
         cur = self.conn.cursor()
         cur.execute('BEGIN')
         items = 0
@@ -81,6 +91,7 @@ class db_interface:
         return items
 
     def rules_rewrite_priorities(self, rules, rule_id, index, direction):
+        """Rewrite the priorities list when necessary."""
         i = 0
         cur = self.conn.cursor()
         cur.execute('BEGIN')
@@ -104,6 +115,7 @@ class db_interface:
         self.conn.commit()
 
     def move_rule_after(self, rule_id, target):
+        """Move a rule after a given rule."""
         def find_place(target, rules):
             i = 0
             while i < len(rules):
@@ -114,6 +126,8 @@ class db_interface:
                 i += 1
             return None, None, -1
 
+        if rule_id == target:
+            raise IllegalRequestException('rule and target are the same')
         rules = self.get_rules()
         this, next, index = find_place(target, rules)
         if this is None:
@@ -133,6 +147,7 @@ class db_interface:
         return True 
 
     def move_rule_before(self, rule_id, target):
+        """Move a rule before a given rule."""
         def find_place(target, rules):
             i = 0
             prev = None
@@ -143,6 +158,8 @@ class db_interface:
                 prev = rules[i]
             return None, None, -1
 
+        if rule_id == target:
+            raise IllegalRequestException('rule and target are the same')
         rules = self.get_rules()
         prev, this, index = find_place(target, rules)
        
