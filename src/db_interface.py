@@ -13,7 +13,11 @@ class db_interface:
     BEFORE = 2
 
     def __init__(self, dsn):
-        self.conn = psycopg2.connect(dsn)
+        try:
+            self.conn = psycopg2.connect(dsn)
+        except Exception as e:
+            print "could not connect to postgres using dsn = '" + dsn + "\n'(" + e.message + ")"
+            raise e
 
     def get_rules(self):
         """Return a list of rules in priority order."""

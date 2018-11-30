@@ -1,16 +1,15 @@
 from flask import Flask, abort, request, render_template
 import json
 import db_interface
-import get_image_mod
+import get_image
 import model
 
 db = db_interface.db_interface('')
-rules = db.get_rules()
-get_image_mod.initialize(rules, db.get_campaigns())
+get_image.initialize(db.get_rules(), db.get_campaigns())
 
 def get_basename(ip_address):
     user = db.get_user(ip_address)
-    return get_image_mod.get_image_basename(user)
+    return get_image.get_image_basename(user)
 
 app = Flask(__name__)
 
@@ -31,7 +30,7 @@ def test_ip(ip_address):
 
 @app.route('/rules', methods=['GET'])
 def show_rules():
-    global rules
+    rules = db.get_rules()
     return render_template(
         'table.html', 
         title="Rules",
