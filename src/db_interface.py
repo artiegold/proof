@@ -1,6 +1,6 @@
 import psycopg2
 import model
-import get_image_mod
+import get_image
 
 class IllegalRequestException(Exception):
     """General exception for illegal requests to this module."""
@@ -113,6 +113,7 @@ class db_interface:
 
             i += 1
         self.conn.commit()
+        get_image.update_rules(rules)
 
     def move_rule_after(self, rule_id, target):
         """Move a rule after a given rule."""
@@ -143,7 +144,7 @@ class db_interface:
             self.rules_rewrite_priorities(rules, rule_id, index, self.AFTER)
 
         self.rule_change_priority(rule_id, new_priority)
-        get_image_mod.update_rules(self.get_rules())
+        get_image.update_rules(self.get_rules())
         return True 
 
     def move_rule_before(self, rule_id, target):
@@ -179,7 +180,7 @@ class db_interface:
                 return True
 
         self.rule_change_priority(rule_id, new_priority)
-        get_image_mod.update_rules(self.get_rules())
+        get_image.update_rules(self.get_rules())
         return True 
 
 
