@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+
+  proof_db:
+    image: postgres:latest
+    restart: always
+    ports: 
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: proof
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  app:
+    image: artiegold_proof
+    ports:
+      - 5001:5000
+    depends_on:
+      - proof_db
+    links:
+      - proof_db:proof_db
+  
+

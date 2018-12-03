@@ -3,8 +3,9 @@ import json
 import db_interface
 import get_image
 import model
+import config
 
-db = db_interface.db_interface('')
+db = db_interface.db_interface(config.get_dsn(config.CONFIG))
 get_image.initialize(db.get_rules(), db.get_campaigns())
 
 def get_basename(ip_address):

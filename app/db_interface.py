@@ -16,7 +16,7 @@ class db_interface:
         try:
             self.conn = psycopg2.connect(dsn)
         except Exception as e:
-            print "could not connect to postgres using dsn = '" + dsn + "\n'(" + e.message + ")"
+            print "Could not connect to postgres using dsn = '" + dsn + "\n'(" + e.message + ")"
             raise e
 
     def get_rules(self):
