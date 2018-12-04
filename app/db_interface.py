@@ -19,6 +19,7 @@ class db_interface:
             try:
                 self.conn = psycopg2.connect(dsn)
                 print "Established database connection!!"
+                restarts = 0
             except Exception as e:
                 print "Could not connect to postgres using dsn = '" + dsn + "\n'(" + e.message + ")"
                 if restarts > 0:
