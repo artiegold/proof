@@ -10,26 +10,20 @@ services:
     image: proof_db        
     restart: always
     ports: 
-      - 5433:5432
+      - 5432:5432
     volumes:
       - ./postgres_data:/var/lib/postgresql:rw
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: proof
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
   app:
     build: ./app
     image: artiegold_proof
     ports:
-      - 5001:5000
+      - 5000:5000
     depends_on:
       - db
-    links:
-      - db:db
+    expose:
+      - "5000"
 

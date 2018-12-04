@@ -1,6 +1,7 @@
 import psycopg2
 import model
 import get_image
+import time
 
 class IllegalRequestException(Exception):
     """General exception for illegal requests to this module."""
@@ -13,11 +14,19 @@ class db_interface:
     BEFORE = 2
 
     def __init__(self, dsn):
-        try:
-            self.conn = psycopg2.connect(dsn)
-        except Exception as e:
-            print "Could not connect to postgres using dsn = '" + dsn + "\n'(" + e.message + ")"
-            raise e
+        restarts = 3
+        while restarts > 0:
+            try:
+                self.conn = psycopg2.connect(dsn)
+                print "Established database connection!!"
+            except Exception as e:
+                print "Could not connect to postgres using dsn = '" + dsn + "\n'(" + e.message + ")"
+                if restarts > 0:
+                    restarts -= 1
+                    print "There are " + str(restarts) + " attempts remaining."
+                    time.sleep(2)
+                else:
+                    raise e
 
     def get_rules(self):
         """Return a list of rules in priority order."""
