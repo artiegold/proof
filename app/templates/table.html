@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    {{ title }}
+    <table border="1">
+      </tr>
+      {% for col in headers %}
+        <td>{{ col }}</td>
+      {% endfor %}
+
+      {% for row in rows -%}
+      <tr>
+      {%- for col in row %}
+        <td>{{ col if col is not none else '' }}</td> 
+      {%- endfor %}
+      </tr>
+      {% endfor %}
+
+    </table>
+  </body>
+</html>
