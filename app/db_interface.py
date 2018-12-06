@@ -102,6 +102,7 @@ class db_interface:
             self.add_user(item)
             items += 1
         self.conn.commit()
+        print "Added " + str(items) + " users"
         return items
 
     def rules_rewrite_priorities(self, rules, rule_id, index, direction):

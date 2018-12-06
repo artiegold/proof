@@ -5,7 +5,7 @@ import csv_interface
 import config
 
 csv = csv_interface.Extract_CSV_Info(
-    '../data/input/Proof_homework.csv',
+    './data/Proof_homework.csv',
     ['User ID', 'IP', 'Geo', 'Industry', 'Company Size']
 )
 dsn = config.get_dsn(config.CONFIG)
