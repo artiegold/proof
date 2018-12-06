@@ -1,5 +1,7 @@
 import csv
+
 """Extract information from a standard CSV file."""
+
 class ColumnNameException(Exception):
     """Exception thrown when needed columns are missing form the CSV"""
     pass
