@@ -15,13 +15,12 @@ The API
 -------
 
 URL | Description
----   -----------
-/ | show default image for the user (as defined in the configuration)
-/testip/<ip-address> | show image determined for ip address given
-/rules | list the rules as they exist
-/rule/move/<rule-name-2>/before/<rule-name-1> | moves rule rule-name2 before rule-name-1
-/rule/move/<rule-name-1>/after/<rule-name-2> |  moves rule rule-name1 after rule-name-2
+--- | -----------
+`GET /` | show default image for the user (as defined in the configuration)
+`GET /testip/<ip-address>` | show image determined for ip address given
+`GET /rules` | list the rules as they exist
+`POST /rule/move/<rule-name-2>/before/<rule-name-1>` | Move the rule named `rule-name-2` before the rule named `rule-name-1` in the rules list
+`POST /rule/move/<rule-name-1>/after/<rule-name-2>` | Move the rule named `rule-name-2` after the rule named `rule-name-1` in the rules list
 
 
-
-
+Note: Currently this is a pure demo mode implementation, there is no true persistence.

@@ -1,17 +1,18 @@
 import unittest
-import get_image
-import model 
+import app
+from app import get_image
+from app import model 
 
 class test_get_image(unittest.TestCase):
     def setUp(self):
         rules_data = [
-            ('GEO_ATX', 'geo', 'Austin', 1),
-            ('GEO_SF', 'geo', 'San Francisco', 2),
-            ('IND_SOFT', 'industry', 'Software', 3),
-            ('IND_SPORTS', 'industry', 'Sports', 4),
-            ('SIZE_0-50', 'company_size', '0 - 50', 5),
-            ('SIZE_100-200', 'company_size', '100 - 200', 6),
-            ('UNKNOWN', '', '', 7)
+            ('GEO_ATX', 'geo', 'Austin', 1, 100),
+            ('GEO_SF', 'geo', 'San Francisco', 2, 200),
+            ('IND_SOFT', 'industry', 'Software', 3, 300),
+            ('IND_SPORTS', 'industry', 'Sports', 4, 400),
+            ('SIZE_0-50', 'company_size', '0 - 50', 5, 500),
+            ('SIZE_100-200', 'company_size', '100 - 200', 6, 600),
+            ('UNKNOWN', '', '', 7, 700)
         ]
         rules = model.make_rules(rules_data)
         campaigns_data = [
@@ -24,7 +25,7 @@ class test_get_image(unittest.TestCase):
             (7, 'Unknown Users', 'shrug.jpg') 
         ]
         campaigns = model.make_campaigns(campaigns_data)
-        self.get_image = get_image.get_image(rules, campaigns)
+        self.get_image = app.get_image.get_image(rules, campaigns)
 
         self.user_austin_sports = model.user('192.168.2.2', 'Austin', 'Sports', '1 - 10')
         self.user_austin_software = model.user('192.168.3.3', 'Austin', 'Software', '100 - 200')
