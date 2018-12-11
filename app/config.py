@@ -3,7 +3,7 @@ import os
 
 CONFIG = {
     'host': 'db',
-    'port': 5432,
+    'port': 5433,
     'user': 'postgres',
     'password': 'postgres',
     'dbname': 'proof',
