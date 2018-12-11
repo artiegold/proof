@@ -14,20 +14,22 @@ class db_interface:
     BEFORE = 2
 
     def __init__(self, dsn):
+        self.im = get_image()
         restarts = 3
-        while restarts > 0:
+        connected = False
+        while not connected and restarts > 0:
             try:
                 self.conn = psycopg2.connect(dsn)
                 print "Established database connection!!"
-                restarts = 0
+                connected = True
             except Exception as e:
                 print "Could not connect to postgres using dsn = '" + dsn + "\n'(" + e.message + ")"
-                if restarts > 0:
-                    restarts -= 1
-                    print "There are " + str(restarts) + " attempts remaining."
-                    time.sleep(2)
-                else:
+                if restarts == 0:
                     raise e
+                restarts -= 1
+                print "There are " + str(restarts) + " attempts remaining."
+                time.sleep(2)
+        self.im = get_image(self.get_rules(), self.get_campaigns())
 
     def get_rules(self):
         """Return a list of rules in priority order."""
@@ -128,76 +130,7 @@ class db_interface:
 
             i += 1
         self.conn.commit()
-        get_image.update_rules(rules)
-
-    def move_rule_after(self, rule_id, target):
-        """Move a rule after a given rule."""
-        def find_place(target, rules):
-            i = 0
-            while i < len(rules):
-                if rules[i].id == target:
-                    if i == len(rules) - 1:
-                        return rules[i], None, i
-                    return rules[i], rules[i + 1], i
-                i += 1
-            return None, None, -1
-
-        if rule_id == target:
-            raise IllegalRequestException('rule and target are the same')
-        rules = self.get_rules()
-        this, next, index = find_place(target, rules)
-        if this is None:
-            return False # the target was not found
-        if next is None:
-            new_priority = this.priority + 100
-        elif next.id == rule_id:
-            return True # it is already there
-
-        if next.priority - this.priority > 1:
-            new_priority = (this.priority + next.priority) // 2
-        else:
-            self.rules_rewrite_priorities(rules, rule_id, index, self.AFTER)
-
-        self.rule_change_priority(rule_id, new_priority)
-        get_image.update_rules(self.get_rules())
-        return True 
-
-    def move_rule_before(self, rule_id, target):
-        """Move a rule before a given rule."""
-        def find_place(target, rules):
-            i = 0
-            prev = None
-            while i < len(rules):
-                if rules[i].id == target:
-                    return prev, rules[i], i
-                i += 1
-                prev = rules[i]
-            return None, None, -1
-
-        if rule_id == target:
-            raise IllegalRequestException('rule and target are the same')
-        rules = self.get_rules()
-        prev, this, index = find_place(target, rules)
-       
-        if this is None:
-            return False # the target was not found
-        
-        if prev is None:
-            new_priority = this.priority // 2
-        else:
-            if prev.id == rule_id:
-                return True # it is already there
-
-            if this.priority - prev.priority > 1:
-                new_priority = (prev.priority + this.priority) // 2
-            else:
-                self.rules_rewrite_priorities(rules, rule_id, index, self.BEFORE)
-                return True
-
-        self.rule_change_priority(rule_id, new_priority)
-        get_image.update_rules(self.get_rules())
-        return True 
-
+        self.im.update_rules(rules)
 
 if __name__ == '__main__':
     print 'nothing to do yet'

@@ -1,11 +1,13 @@
 from flask import Flask, abort, request, render_template
 import json
 import db_interface
+import move_rules
 import get_image
 import model
 import config
 
 db = db_interface.db_interface(config.get_dsn(config.CONFIG))
+mover = move_rules(db)
 get_image.initialize(db.get_rules(), db.get_campaigns())
 
 def get_basename(ip_address):
@@ -41,7 +43,7 @@ def show_rules():
 
 @app.route('/rule/move/<rule_id>/after/<target>', methods=['GET', 'PUT'])
 def move_rule_after(rule_id, target):
-    db.move_rule_after(rule_id, target)
+    mover.move_rule_after(rule_id, target)
     rules = db.get_rules()
     return render_template(
         'table.html', 
@@ -53,7 +55,7 @@ def move_rule_after(rule_id, target):
 
 @app.route('/rule/move/<rule_id>/before/<target>', methods=['GET', 'PUT'])
 def move_rule_before(rule_id, target):
-    db.move_rule_before(rule_id, target)
+    mover.move_rule_before(rule_id, target)
     rules = db.get_rules()
     return render_template(
         'table.html', 
