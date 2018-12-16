@@ -13,13 +13,13 @@ class get_image:
         self.campaigns = campaigns
         self.default_rule = self.get_default_rule(rules)
 
-    def _update_rules(self, rules):
+    def update_rules(self, rules):
         self.rules = rules
 
-    def _update_campaigns(self, campaigns):
+    def update_campaigns(self, campaigns):
         self.campaigns = campaigns
 
-    def _update_default_rule(self, rule):
+    def update_default_rule(self, rule):
         self.default_rule = rule
     
     @staticmethod

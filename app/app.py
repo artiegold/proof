@@ -7,12 +7,12 @@ import model
 import config
 
 db = db_interface.db_interface(config.get_dsn(config.CONFIG))
-mover = move_rules(db)
-get_image.initialize(db.get_rules(), db.get_campaigns())
+im  = get_image.get_image(db.get_rules(), db.get_campaigns())
+mover = move_rules.move_rules(db, im)
 
 def get_basename(ip_address):
     user = db.get_user(ip_address)
-    return get_image.get_image_basename(user)
+    return im.get_image_basename(user)
 
 app = Flask(__name__)
 

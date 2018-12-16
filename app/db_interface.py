@@ -14,7 +14,6 @@ class db_interface:
     BEFORE = 2
 
     def __init__(self, dsn):
-        self.im = get_image()
         restarts = 3
         connected = False
         while not connected and restarts > 0:
@@ -29,7 +28,7 @@ class db_interface:
                 restarts -= 1
                 print "There are " + str(restarts) + " attempts remaining."
                 time.sleep(2)
-        self.im = get_image(self.get_rules(), self.get_campaigns())
+        self.im = get_image.get_image(self.get_rules(), self.get_campaigns())
 
     def get_rules(self):
         """Return a list of rules in priority order."""
